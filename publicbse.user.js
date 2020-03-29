@@ -2,7 +2,7 @@
 // @name         Public Battle Stats Estimate
 // @namespace    http://tampermonkey.net/
 // @version      1.0
-// @description  try to take over the world!
+// @description  Estimating battle stats of profiles in TORN via the triggers-rank method.
 // @author       You
 // @match        https://www.torn.com/profiles.php?XID=*
 // @grant        none
