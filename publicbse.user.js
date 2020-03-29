@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Public Battle Stats Estimative
+// @name         Public Battle Stats Estimate
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  try to take over the world!
@@ -7,59 +7,6 @@
 // @match        https://www.torn.com/profiles.php?XID=*
 // @grant        none
 // ==/UserScript==
-
-var encKey  = GM_getValue ("encKey",  "");
-var usr     = GM_getValue ("lognUsr", "");
-
-if ( ! encKey) {
-    encKey  = prompt (
-        'Script key not set for ' + location.hostname + '. Please enter a random string:',
-        ''
-    );
-    GM_setValue ("encKey", encKey);
-
-    usr     = "";   // New key makes prev stored values (if any) unable to decode.
-}
-usr         = decodeOrPrompt (usr,   "U-name", "lognUsr");
-
-
-function decodeOrPrompt (targVar, userPrompt, setValVarName) {
-    if (targVar) {
-        targVar     = unStoreAndDecrypt (targVar);
-    }
-    else {
-        targVar     = prompt (
-            userPrompt + ' not set for ' + location.hostname + '. Please enter it now:',
-            ''
-        );
-        GM_setValue (setValVarName, encryptAndStore (targVar) );
-    }
-    return targVar;
-}
-
-function encryptAndStore (clearText) {
-    return  JSON.stringify (sjcl.encrypt (encKey, clearText) );
-}
-
-function unStoreAndDecrypt (jsonObj) {
-    return  sjcl.decrypt (encKey, JSON.parse (jsonObj) );
-}
-
-//-- Add menu commands that will allow U and P to be changed.
-GM_registerMenuCommand ("Change Username", changeUsername);
-GM_registerMenuCommand ("Change Password", changePassword);
-
-function changeUsername () {
-    promptAndChangeStoredValue (usr,   "U-name", "lognUsr");
-}
-
-function promptAndChangeStoredValue (targVar, userPrompt, setValVarName) {
-    targVar     = prompt (
-        'Change ' + userPrompt + ' for ' + location.hostname + ':',
-        targVar
-    );
-    GM_setValue (setValVarName, encryptAndStore (targVar) );
-}
 
 (function() {
     var ranks_list = {"Absolute beginner":0, "Beginner":1, "Inexperienced":2, "Rookie":3,
@@ -77,7 +24,7 @@ function promptAndChangeStoredValue (targVar, userPrompt, setValVarName) {
 
     var target_id = document.querySelectorAll('[rel=canonical]')[0].href.split("ID=")[1];
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', "https://api.torn.com/user/"+target_id+"?selections=profile,personalstats,crimes&key="+usr, true);
+    xhr.open('GET', "https://api.torn.com/user/"+target_id+"?selections=profile,personalstats,crimes&key=APIKEYHERE", true);
     xhr.send();
 
     xhr.onreadystatechange = processRequest;
